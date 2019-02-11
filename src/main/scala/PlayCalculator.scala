@@ -26,23 +26,23 @@ class PlayCalculator {
   }
 
   private[this] def amountFor(play: Play, performance: Performance): Int = {
-    var thisAmount = 0
+    var result = 0
     play.playType match {
       case "tragedy" => {
-        thisAmount = 40000
+        result = 40000
         if (performance.audience > 30) {
-          thisAmount = thisAmount + 1000 * (performance.audience - 30)
+          result = result + 1000 * (performance.audience - 30)
         }
       }
        case "comedy" => {
-        thisAmount = 30000
+        result = 30000
         if (performance.audience > 20) {
-          thisAmount = thisAmount + 10000 + 500 * (performance.audience - 20)
+          result = result + 10000 + 500 * (performance.audience - 20)
         }
       }
       case _ => throw new Exception("unknown type")
     }
-    thisAmount
+    result
   }
 
   case class Invoice(customer: String, performances: Seq[Performance])
