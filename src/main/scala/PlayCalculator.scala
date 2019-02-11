@@ -7,22 +7,7 @@ class PlayCalculator {
     invoice.performances.foreach { performance =>
       {
         val play = plays(performance.playId)
-        var thisAmount = 0
-        play.playType match {
-          case "tragedy" => {
-            thisAmount = 40000
-            if (performance.audience > 30) {
-              thisAmount = thisAmount + 1000 * (performance.audience - 30)
-            }
-          }
-          case "comedy" => {
-            thisAmount = 30000
-            if (performance.audience > 20) {
-              thisAmount = thisAmount + 10000 + 500 * (performance.audience - 20)
-            }
-          }
-          case _ => throw new Exception("unknown type")
-        }
+        val thisAmount = amountFor(play, performance)
 
         // add volume credits
         volumeCredits = volumeCredits + Math.max(performance.audience - 30, 0)
@@ -38,6 +23,26 @@ class PlayCalculator {
     result = result + s"Amount owed is ${format(totalAmount / 100)}\n"
     result = result + s"You earned ${volumeCredits} credits\n"
     return result
+  }
+
+  private[this] def amountFor(play: Play, performance: Performance): Int = {
+    var thisAmount = 0
+    play.playType match {
+      case "tragedy" => {
+        thisAmount = 40000
+        if (performance.audience > 30) {
+          thisAmount = thisAmount + 1000 * (performance.audience - 30)
+        }
+      }
+       case "comedy" => {
+        thisAmount = 30000
+        if (performance.audience > 20) {
+          thisAmount = thisAmount + 10000 + 500 * (performance.audience - 20)
+        }
+      }
+      case _ => throw new Exception("unknown type")
+    }
+    thisAmount
   }
 
   case class Invoice(customer: String, performances: Seq[Performance])
